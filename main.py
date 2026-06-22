@@ -201,6 +201,8 @@ async def ws_recognize(websocket: WebSocket):
 
 
                         print("COVER:", cover)
+                        print("ARTIST", artist_img)
+                        print("ARTIST BIO", artist_bio)
 
                         print("LYRICS:", lyrics)
 
