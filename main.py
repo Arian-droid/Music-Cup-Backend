@@ -155,6 +155,10 @@ async def ws_recognize(websocket: WebSocket):
 
                             artist_data = artist_res.json()
 
+                            print("ARTIST NAME:", artist)
+                            print("ARTIST API STATUS:", artist_res.status_code)
+                            print("ARTIST API RESPONSE:", artist_res.text[:1000])
+
                             if artist_data.get("artists"):
                                 artist_info = artist_data["artists"][0]
 
