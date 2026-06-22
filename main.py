@@ -1,11 +1,9 @@
 from fastapi import FastAPI, UploadFile, File, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-import yt_dlp
 import requests
 import tempfile
 import os
-import urllib.parse
+
 
 app = FastAPI()
 
