@@ -17,7 +17,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-AUDD_TOKEN = "c5528448035fc86c7fc1d02e8b508b4a"
+# AUDD_TOKEN = "c5528448035fc86c7fc1d02e8b508b4a"
+AUDD_TOKEN = os.getenv("AUDD_TOKEN")
 
 
 # =========================
