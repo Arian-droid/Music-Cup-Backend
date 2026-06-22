@@ -50,14 +50,6 @@ async def recognize(file: UploadFile = File(...)):
             return {"success": False, "message": "Song not found"}
 
         result = data["result"]
-
-        spotify_data = result.get("spotify", {})
-        spotify_url = spotify_data.get("external_urls", {}).get("spotify")
-
-        spotify_album_image = None
-        if spotify_data.get("album", {}).get("images"):
-            spotify_album_image = spotify_data["album"]["images"][0]["url"]
-
         title = result.get("title")
         artist = result.get("artist")
 
