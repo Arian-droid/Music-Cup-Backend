@@ -147,9 +147,11 @@ async def ws_recognize(websocket: WebSocket):
                         artist_bio = None
 
                         try:
+                            artist_search = artist.split("/")[0].strip()
+
                             artist_res = requests.get(
                                 "https://www.theaudiodb.com/api/v1/json/2/search.php",
-                                params={"s": artist},
+                                params={"s": artist_search},
                                 timeout=15
                             )
 
