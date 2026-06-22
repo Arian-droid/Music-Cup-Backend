@@ -78,33 +78,7 @@ async def recognize(file: UploadFile = File(...)):
         except Exception as e:
             print("Lyrics API Error:", e)
 
-        # deezer
-        # deezer = requests.get(
-        #     f"https://api.deezer.com/search?q={title} {artist}"
-        # ).json()
-        #
-        # cover = None
-        # artist_img = None
-        #
-        # if deezer.get("data"):
-        #     track = deezer["data"][0]
-        #     cover = track["album"]["cover_xl"]
-        #     artist_img = track["artist"]["picture_xl"]
 
-        # print("this is cover" + cover)
-        # print("this is artist" + artist_img)
-
-        # return {
-        #     "success": True,
-        #     "title": title,
-        #     "artist": artist,
-        #     "album": result.get("album"),
-        #     "cover": cover,
-        #     "artist_image": artist_img,
-        #     "lyrics": lyrics,
-        #     "spotify_url": spotify_url,
-        #     "spotify_image": spotify_album_image,
-        # }
 
     finally:
         if os.path.exists(temp_path):
@@ -193,19 +167,6 @@ async def ws_recognize(websocket: WebSocket):
                         except Exception as e:
                             print("Artist API Error:", e)
 
-                        # deezer enrichment (same as HTTP)
-                        # deezer = requests.get(
-                        #     f"https://api.deezer.com/search?q={title} {artist}"
-                        # ).json()
-                        #
-                        # cover = None
-                        # artist_img = None
-                        #
-                        # if deezer.get("data"):
-                        #     track = deezer["data"][0]
-                        #     cover = track["album"]["cover_xl"]
-                        #     artist_img = track["artist"]["picture_xl"]
-
                         lyrics = None
 
                         try:
@@ -234,27 +195,6 @@ async def ws_recognize(websocket: WebSocket):
 
                         except Exception as e:
                             print("Lyrics error:", e)
-                        # lyrics = None
-                        # try:
-                        #     lyrics_response = requests.get(
-                        #         "https://lrclib.net/api/get",
-                        #         params={
-                        #             "artist_name": artist,
-                        #             "track_name": title,
-                        #         },
-                        #         timeout=15
-                        #     )
-                        #
-                        #     print("status code:" + lyrics_response.status_code)
-                        #
-                        #     if lyrics_response.status_code == 200:
-                        #         lyrics_data = lyrics_response.json()
-                        #         lyrics = lyrics_data.get("plainLyrics") or lyrics_data.get("syncedLyrics")
-                        #         print("LRCLIB STATUS:", lyrics_response.status_code)
-                        #         print("LRCLIB BODY:", lyrics_response.text)
-                        #
-                        # except Exception as e:
-                        #     print("Lyrics error:", e)
 
 
 
@@ -300,44 +240,3 @@ async def ws_recognize(websocket: WebSocket):
 # =========================
 # DOWNLOAD API (UNCHANGED)
 # =========================
-
-
-
-# @app.post("/download")
-# async def download_song(title: str, artist: str):
-#
-#     try:
-#         with tempfile.TemporaryDirectory() as temp_dir:
-#
-#             search_query = f"{artist} {title} audio"
-#
-#             ydl_opts = {
-#                 "format": "bestaudio/best",
-#                 "postprocessors": [{
-#                     "key": "FFmpegExtractAudio",
-#                     "preferredcodec": "mp3",
-#                     "preferredquality": "192",
-#                 }],
-#                 "outtmpl": os.path.join(temp_dir, f"{artist} - {title}.%(ext)s"),
-#                 "quiet": True,
-#                 "no_warnings": True,
-#                 "default_search": "ytsearch",
-#                 "extractaudio": True,
-#                 "audioformat": "mp3",
-#             }
-#
-#             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-#                 ydl.download([search_query])
-#
-#             for file in os.listdir(temp_dir):
-#                 if file.endswith(".mp3"):
-#                     return FileResponse(
-#                         path=os.path.join(temp_dir, file),
-#                         media_type="audio/mpeg",
-#                         filename=file
-#                     )
-#
-#             return {"error": "Download failed"}
-#
-#     except Exception as e:
-#         return {"error": str(e)}
