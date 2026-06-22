@@ -87,6 +87,7 @@ async def ws_recognize(websocket: WebSocket):
     await websocket.accept()
 
     buffer = bytearray()
+    attempts = 0
 
     try:
         while True:
@@ -216,9 +217,17 @@ async def ws_recognize(websocket: WebSocket):
                     # STILL SEARCHING
                     # =========================
                     else:
+                        attempts += 1
+
                         await websocket.send_json({
                             "type": "SEARCHING"
                         })
+
+                        if attempts >= 5:
+                            await websocket.send_json({
+                                "type": "NOT_FOUND"
+                            })
+                            break
 
                 finally:
                     if os.path.exists(temp_path):
