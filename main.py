@@ -100,7 +100,7 @@ async def ws_recognize(websocket: WebSocket):
             print("Buffer:", len(buffer), flush=True)
 
             # ⚡ process every ~3–4 seconds of audio
-            if len(buffer) > 100_000:
+            if len(buffer) > 120_000:
 
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_file:
                     temp_file.write(buffer)
