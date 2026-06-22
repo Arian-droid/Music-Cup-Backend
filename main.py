@@ -20,6 +20,7 @@ app.add_middleware(
 
 # AUDD_TOKEN = "c5528448035fc86c7fc1d02e8b508b4a"
 AUDD_TOKEN = os.getenv("AUDD_TOKEN")
+print("TOKEN:", AUDD_TOKEN, flush=True)
 
 
 
@@ -34,6 +35,7 @@ async def recognize(file: UploadFile = File(...)):
         temp_path = temp_file.name
 
     try:
+        print("TEMP FILE SIZE:", os.path.getsize(temp_path), flush=True)
         with open(temp_path, "rb") as audio:
             response = requests.post(
                 "https://api.audd.io/",
@@ -92,15 +94,18 @@ async def ws_recognize(websocket: WebSocket):
     try:
         while True:
             chunk = await websocket.receive_bytes()
+            print("Chunk:", len(chunk), flush=True)
 
             buffer.extend(chunk)
+            print("Buffer:", len(buffer), flush=True)
 
             # ⚡ process every ~3–4 seconds of audio
-            if len(buffer) > 100_000:
+            if len(buffer) > 300_000:
 
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_file:
                     temp_file.write(buffer)
                     temp_path = temp_file.name
+                    print("File size:", os.path.getsize(temp_path), flush=True)
 
                 buffer = bytearray()
 
@@ -116,6 +121,7 @@ async def ws_recognize(websocket: WebSocket):
                         )
 
                     data = response.json()
+                    print("Audd:", response.text, flush=True)
 
 
 
