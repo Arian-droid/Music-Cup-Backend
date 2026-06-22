@@ -100,7 +100,7 @@ async def ws_recognize(websocket: WebSocket):
             print("Buffer:", len(buffer), flush=True)
 
             # ⚡ process every ~3–4 seconds of audio
-            if len(buffer) > 300_000:
+            if len(buffer) > 100_000:
 
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_file:
                     temp_file.write(buffer)
@@ -230,7 +230,7 @@ async def ws_recognize(websocket: WebSocket):
                             "type": "SEARCHING"
                         })
 
-                        if attempts >= 5:
+                        if attempts >= 7:
                             await websocket.send_json({
                                 "type": "NOT_FOUND"
                             })
