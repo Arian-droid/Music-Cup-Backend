@@ -110,7 +110,6 @@ async def ws_recognize(websocket: WebSocket):
 
                 buffer = bytearray()
 
-
                 try:
                     start_time = time.time()
 
