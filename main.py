@@ -152,7 +152,7 @@ async def ws_recognize(websocket: WebSocket):
                             artist_res = requests.get(
                                 "https://www.theaudiodb.com/api/v1/json/2/search.php",
                                 params={"s": artist_search},
-                                timeout=15
+                                timeout=3
                             )
 
                             artist_data = artist_res.json()
@@ -209,8 +209,17 @@ async def ws_recognize(websocket: WebSocket):
                         print("COVER:", cover)
                         print("ARTIST", artist_img)
                         print("ARTIST BIO", artist_bio)
-
+                        print("FINAL COVER:", cover)
+                        print("FINAL ARTIST IMAGE:", artist_img)
                         print("LYRICS:", lyrics)
+
+                        # Fallback image logic
+
+                        if not artist_img and cover:
+                            artist_img = cover
+
+                        if not cover and artist_img:
+                            cover = artist_img
 
                         await websocket.send_json({
                             "type": "FOUND",
