@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import requests
 import tempfile
 import os
+import time
 
 
 
@@ -110,6 +111,8 @@ async def ws_recognize(websocket: WebSocket):
                 buffer = bytearray()
 
                 try:
+                    start_time = time.time()
+
                     with open(temp_path, "rb") as audio:
                         response = requests.post(
                             "https://api.audd.io/",
@@ -186,7 +189,7 @@ async def ws_recognize(websocket: WebSocket):
                                     "artist_name": artist_clean,
                                     "track_name": title_clean,
                                 },
-                                timeout=15
+                                timeout=3
                             )
 
                             print("LRCLIB STATUS:", lyrics_response.status_code)
@@ -212,6 +215,7 @@ async def ws_recognize(websocket: WebSocket):
                         print("FINAL COVER:", cover)
                         print("FINAL ARTIST IMAGE:", artist_img)
                         print("LYRICS:", lyrics)
+                        print("TOTAL TIME:", time.time() - start_time)
 
                         # Fallback image logic
 
