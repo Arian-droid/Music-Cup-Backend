@@ -189,7 +189,7 @@ async def ws_recognize(websocket: WebSocket):
                                     "artist_name": artist_clean,
                                     "track_name": title_clean,
                                 },
-                                timeout=3
+                                timeout=5
                             )
 
                             print("LRCLIB STATUS:", lyrics_response.status_code)
