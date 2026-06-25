@@ -7,12 +7,6 @@ import time
 
 
 
-is_recognizing = False
-last_request_time = 0
-COOLDOWN = 5  # seconds
-
-
-
 app = FastAPI()
 
 app.add_middleware(
@@ -107,15 +101,7 @@ async def ws_recognize(websocket: WebSocket):
             print("Buffer:", len(buffer), flush=True)
 
             # ⚡ process every ~3–4 seconds of audio
-            global last_request_time, is_recognizing
-
-            if len(buffer) > 300_000 and (time.time() - last_request_time > COOLDOWN):
-
-                if is_recognizing:
-                    continue
-
-                is_recognizing = True
-                last_request_time = time.time()
+            if len(buffer) > 120_000:
 
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_file:
                     temp_file.write(buffer)
@@ -274,8 +260,6 @@ async def ws_recognize(websocket: WebSocket):
                 finally:
                     if os.path.exists(temp_path):
                         os.remove(temp_path)
-
-                        is_recognizing = False
 
     except WebSocketDisconnect:
         print("Client disconnected")
