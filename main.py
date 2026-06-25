@@ -25,61 +25,61 @@ print("TOKEN:", AUDD_TOKEN, flush=True)
 
 
 
-# =========================
-# HTTP (your original API)
-# =========================
-@app.post("/recognize")
-async def recognize(file: UploadFile = File(...)):
-
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_file:
-        temp_file.write(await file.read())
-        temp_path = temp_file.name
-
-    try:
-        print("TEMP FILE SIZE:", os.path.getsize(temp_path), flush=True)
-        with open(temp_path, "rb") as audio:
-            response = requests.post(
-                "https://api.audd.io/",
-                data={
-                    "api_token": AUDD_TOKEN,
-                    "return": "spotify,apple_music"
-                },
-                files={"file": audio}
-            )
-
-        data = response.json()
-
-        if not data.get("result"):
-            return {"success": False, "message": "Song not found"}
-
-        result = data["result"]
-        title = result.get("title")
-        artist = result.get("artist")
-
-        # lyrics
-        lyrics = None
-        try:
-            lyrics_response = requests.get(
-                "https://lrclib.net/api/get",
-                params={
-                    "artist_name": artist,
-                    "track_name": title,
-                },
-                timeout=5
-            )
-
-            if lyrics_response.status_code == 200:
-                lyrics_data = lyrics_response.json()
-                lyrics = lyrics_data.get("plainLyrics") or lyrics_data.get("syncedLyrics")
-
-        except Exception as e:
-            print("Lyrics API Error:", e)
-
-
-
-    finally:
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
+# # =========================
+# # HTTP (your original API)
+# # =========================
+# @app.post("/recognize")
+# async def recognize(file: UploadFile = File(...)):
+#
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_file:
+#         temp_file.write(await file.read())
+#         temp_path = temp_file.name
+#
+#     try:
+#         print("TEMP FILE SIZE:", os.path.getsize(temp_path), flush=True)
+#         with open(temp_path, "rb") as audio:
+#             response = requests.post(
+#                 "https://api.audd.io/",
+#                 data={
+#                     "api_token": AUDD_TOKEN,
+#                     "return": "spotify,apple_music"
+#                 },
+#                 files={"file": audio}
+#             )
+#
+#         data = response.json()
+#
+#         if not data.get("result"):
+#             return {"success": False, "message": "Song not found"}
+#
+#         result = data["result"]
+#         title = result.get("title")
+#         artist = result.get("artist")
+#
+#         # lyrics
+#         lyrics = None
+#         try:
+#             lyrics_response = requests.get(
+#                 "https://lrclib.net/api/get",
+#                 params={
+#                     "artist_name": artist,
+#                     "track_name": title,
+#                 },
+#                 timeout=5
+#             )
+#
+#             if lyrics_response.status_code == 200:
+#                 lyrics_data = lyrics_response.json()
+#                 lyrics = lyrics_data.get("plainLyrics") or lyrics_data.get("syncedLyrics")
+#
+#         except Exception as e:
+#             print("Lyrics API Error:", e)
+#
+#
+#
+#     finally:
+#         if os.path.exists(temp_path):
+#             os.remove(temp_path)
 
 
 # =========================
