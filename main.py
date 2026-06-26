@@ -25,9 +25,7 @@ print("TOKEN:", AUDD_TOKEN, flush=True)
 
 
 
-# # =========================
-# # HTTP (your original API)
-# # =========================
+
 # @app.post("/recognize")
 # async def recognize(file: UploadFile = File(...)):
 #
@@ -82,9 +80,9 @@ print("TOKEN:", AUDD_TOKEN, flush=True)
 #             os.remove(temp_path)
 
 
-# =========================
-# WEB SOCKET (LIVE STREAM)
-# =========================
+
+# Web Socket Real_time app
+
 @app.websocket("/ws/recognize")
 async def ws_recognize(websocket: WebSocket):
     await websocket.accept()
@@ -128,9 +126,8 @@ async def ws_recognize(websocket: WebSocket):
 
 
 
-                    # =========================
-                    # SONG FOUND
-                    # =========================
+
+                    # Song Found
                     if data.get("result"):
                         result = data["result"]
 
@@ -189,7 +186,7 @@ async def ws_recognize(websocket: WebSocket):
                                     "artist_name": artist_clean,
                                     "track_name": title_clean,
                                 },
-                                timeout=5
+                                timeout=10
                             )
 
                             print("LRCLIB STATUS:", lyrics_response.status_code)
@@ -218,13 +215,13 @@ async def ws_recognize(websocket: WebSocket):
                         print("TOTAL TIME:", time.time() - start_time)
 
                         # Fallback image logic
-
                         if not artist_img and cover:
                             artist_img = cover
 
                         if not cover and artist_img:
                             cover = artist_img
 
+                        # Json send to FrontEnd
                         await websocket.send_json({
                             "type": "FOUND",
                             "data": {
@@ -241,9 +238,8 @@ async def ws_recognize(websocket: WebSocket):
 
                         break
 
-                    # =========================
+
                     # STILL SEARCHING
-                    # =========================
                     else:
                         attempts += 1
 
@@ -268,6 +264,3 @@ async def ws_recognize(websocket: WebSocket):
         await websocket.close()
 
 
-# =========================
-# DOWNLOAD API (UNCHANGED)
-# =========================
