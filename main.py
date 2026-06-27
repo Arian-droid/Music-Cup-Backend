@@ -82,11 +82,13 @@ print("TOKEN:", AUDD_TOKEN, flush=True)
 
 
 # Web Socket Real_time app
-
 @app.websocket("/ws/recognize")
 async def ws_recognize(websocket: WebSocket):
+
+    # Connection Allowed
     await websocket.accept()
 
+    # Creating Buffer
     buffer = bytearray()
     attempts = 0
 
@@ -98,7 +100,7 @@ async def ws_recognize(websocket: WebSocket):
             buffer.extend(chunk)
             print("Buffer:", len(buffer), flush=True)
 
-            # ⚡ process every ~3–4 seconds of audio
+            # if the buffer size over the 120 kb
             if len(buffer) > 120_000:
 
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_file:
